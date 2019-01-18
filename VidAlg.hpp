@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <cassert>
 #include <iostream>
 #include <algorithm>
 #include <opencv2/core/core.hpp>
@@ -17,21 +18,29 @@ class VidAlg{
      int size_;
      std::string videoName_;
      int fps_;
+     int sizePerValue_;
      void openOutput();
      void setArray();
      void shuffle();  
-     void closeRecords();
+     void closeOutput();
+     cv::Mat paintArray(int comp);
    public:
 
-     VidAlg(int size,std::string vid="VidArg.avi",int fps=30){
-       cv::assert(size>0);
-        size=size_;
+     VidAlg(int size,int sizePerValue=1,int fps=30,std::string vid="VidAlg.avi"){
+       assert(size>0);
+        size_=size;
         setArray();
         videoName_=vid;
         fps_=fps;
+        sizePerValue_=sizePerValue;
      }
-
-
-
+     inline int getFps(){return fps_;}
+     inline int getSize(){return size_;}
+     inline std::string getVideoName(){return videoName_;}
+     inline void setFps(int fps){fps_=fps;}
+     inline void setVideoName(std::string name){videoName_=name;}
+     inline void setSize(int size){size_=size; setArray();}
+     void selectionSort();
+     void bubble();
 };
 #endif
