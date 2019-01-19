@@ -23,7 +23,7 @@ class VidAlg{
      void setArray();
      void shuffle();  
      void closeOutput();
-     cv::Mat paintArray(int comp);
+     cv::Mat paintArray(int comp,int desp);
    public:
 
      VidAlg(int size,int sizePerValue=1,int fps=30,std::string vid="VidAlg.avi"){
@@ -42,5 +42,8 @@ class VidAlg{
      inline void setSize(int size){size_=size; setArray();}
      void selectionSort();
      void bubble();
+     void shakerSort();
+     void oddEvenSort();
+     void combSort();
 };
 #endif
