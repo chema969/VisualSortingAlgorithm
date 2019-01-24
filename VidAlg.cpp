@@ -46,6 +46,11 @@ void VidAlg::closeOutput(){
    output_.release();
 }
 
+void VidAlg::paintAndClose(int comp, int swaps){    
+    cv::Mat x= paintArray(comp,swaps);
+    for(int i=0;i<fps_;i++) output_<<x;
+    closeOutput();
+}
 void VidAlg::selectionSort(){
        shuffle();
        openOutput();
@@ -75,9 +80,7 @@ void VidAlg::selectionSort(){
           output_<<paintArray(comp,swaps);
           
         }
-    cv::Mat x= paintArray(comp,swaps);
-    for(int i=0;i<fps_;i++) output_<<x;
-    closeOutput();
+    paintAndClose(comp,swaps);
 }
 
 void VidAlg::bubble(){
@@ -109,9 +112,7 @@ void VidAlg::bubble(){
             }
 
       }
-    cv::Mat x= paintArray(comp,swaps);
-    for(int i=0;i<fps_;i++) output_<<x;
-    closeOutput();
+    paintAndClose(comp,swaps);
 }
 
 
@@ -150,9 +151,7 @@ void VidAlg::shakerSort() {
 
    }
     
-    cv::Mat x= paintArray(comp,swaps);
-    for(int i=0;i<fps_;i++) output_<<x;
-    closeOutput();
+    paintAndClose(comp,swaps);
 }
 
 
@@ -193,10 +192,7 @@ void VidAlg::oddEvenSort()
             } 
         } 
     } 
-  
-    cv::Mat x= paintArray(comp,swaps);
-    for(int i=0;i<fps_;i++) output_<<x;
-    closeOutput();
+    paintAndClose(comp,swaps);
 } 
 
 int getNextGap(int gap) 
@@ -246,8 +242,99 @@ void VidAlg::combSort()
             } 
         } 
     }
-    cv::Mat x= paintArray(comp,swaps);
-    for(int i=0;i<fps_;i++) output_<<x;
-    closeOutput();
+     paintAndClose(comp,swaps);
 } 
+
+bool isSorted(std::vector <int> &arr)
+{
+  for(int i=1;i<arr.size();i++){
+     if(arr[i-1]>arr[i])return false;
+   }
+  return true;
+}
+ 
+void VidAlg::bogoSort() 
+{ 
+   shuffle();
+   openOutput();
+   int swaps=0;
+   while(!isSorted(arr_)){
+     swaps+=size_;
+     output_<<paintArray(0,swaps);
+     shuffle();
+  } 
+    paintAndClose(0,swaps);
+}
+
+int VidAlg::partition(int primero, int ultimo,int &comp,int &swaps)
+{
+   int pivote=arr_[ultimo];
+   int i=primero-1;
+
+   for(int j=primero; j<=ultimo-1; j++){
+      comp++;
+      if(arr_[j] <= pivote){
+         i++;
+         std::swap(arr_[i], arr_[j]);
+         swaps++;
+         output_<< paintArray(comp,swaps);
+      }
+   }
+   swaps++;
+   std::swap(arr_[i+1], arr_[ultimo]);
+   output_<< paintArray(comp,swaps);
+   return i+1;
+}
+
+void VidAlg::quick(int primero, int ultimo,int &comp,int &swaps)
+{
+   if(primero < ultimo){
+      int pivote=partition(primero, ultimo,comp,swaps);
+
+      quick(primero, pivote - 1,comp,swaps);
+      quick(pivote + 1, ultimo,comp,swaps);
+  }
+}
+
+
+void VidAlg::quicksort()
+{
+    shuffle();
+    int comp=0,swaps=0;
+    openOutput();
+    quick(0,size_,comp,swaps);
+    paintAndClose(comp,swaps);
+}
+
+
+
+void VidAlg::insertionSort() 
+{ 
+    shuffle();
+    int comp=0,swaps=0;
+    openOutput();
+   int i, key, j; 
+   for (i = 1; i < size_; i++) 
+   { 
+       key = arr_[i]; 
+       j = i-1; 
+  
+       /* Move elements of arr[0..i-1], that are 
+          greater than key, to one position ahead 
+          of their current position */
+       while (j >= 0 && arr_[j] > key) 
+       { 
+           comp++;
+           swaps++;
+           arr_[j+1] = arr_[j]; 
+           output_<< paintArray(comp,swaps);
+           j = j-1; 
+       } 
+       arr_[j+1] = key; 
+   } 
+    paintAndClose(comp,swaps);
+} 
+
+
+
 

@@ -23,6 +23,9 @@ class VidAlg{
      void setArray();
      void shuffle();  
      void closeOutput();
+     void paintAndClose(int comp,int swaps);
+     int partition(int primero, int ultimo,int &comp,int &swap);
+     void quick(int primero, int ultimo,int &comp,int &swaps);
      cv::Mat paintArray(int comp,int desp);
    public:
 
@@ -45,5 +48,8 @@ class VidAlg{
      void shakerSort();
      void oddEvenSort();
      void combSort();
+     void bogoSort();
+     void quicksort();
+     void insertionSort();
 };
 #endif
